@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Create Account — Styra{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+
+  <div class="auth-panel">
+    <div class="auth-panel-bg"></div>
+    <div class="auth-panel-content">
+      <span class="auth-panel-logo">Styra</span>
+      <blockquote class="auth-panel-quote">
+        <span class="auth-panel-quote-mark">"</span>
+        Every great wardrobe begins with one honest question — who do you want to be?
+      </blockquote>
+      <div class="auth-panel-chips">
+        <span>Traditional wear</span>
+        <span>English fashion</span>
+        <span>Body inclusive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-form-inner">
+      <div class="auth-header">
+        <h1 class="auth-title">Create your style profile</h1>
+        <p class="auth-sub">Join Styra and get personalised outfit recommendations.</p>
+      </div>
+      <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+        <div class="form-group">
+          <div class="field">
+            <label class="label" for="name">Full name</label>
+            <input class="input" type="text" id="name" name="name" placeholder="Fatima Abdullahi" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label class="label" for="email">Email address</label>
+            <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <input class="input" type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn--full btn--lg">Create account & start quiz →</button>
+        </div>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </div>
+  </div>
+
+</section>
+{% endblock %}

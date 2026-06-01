@@ -1,0 +1,90 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Outfits{% endblock %}
+{% block page_title %}Outfit Catalogue{% endblock %}
+
+{% block content %}
+
+<div class="filter-bar">
+  <form method="GET" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+    <input class="form-control" type="search" name="q" placeholder="Search outfits…" value="{{ request.args.get('q','') }}">
+    <select class="form-control" name="type">
+      <option value="">All types</option>
+      <option value="traditional" {% if request.args.get('type')=='traditional' %}selected{% endif %}>Traditional</option>
+      <option value="english" {% if request.args.get('type')=='english' %}selected{% endif %}>English</option>
+    </select>
+    <select class="form-control" name="occasion">
+      <option value="">All occasions</option>
+      {% for occ in ['casual','formal','office','wedding'] %}
+      <option value="{{ occ }}" {% if request.args.get('occasion')==occ %}selected{% endif %}>{{ occ|capitalize }}</option>
+      {% endfor %}
+    </select>
+    <select class="form-control" name="modesty">
+      <option value="">All modesty</option>
+      {% for m in ['modest','balanced','bold'] %}
+      <option value="{{ m }}" {% if request.args.get('modesty')==m %}selected{% endif %}>{{ m|capitalize }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+    <a href="{{ url_for('admin_outfits') }}" class="btn btn-secondary">Clear</a>
+  </form>
+  <a href="{{ url_for('admin_add_outfit') }}" class="btn btn-primary" style="margin-left:auto;">＋ Add Outfit</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">{{ outfits|length }} outfit{{ 's' if outfits|length != 1 }}</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Label</th>
+          <th>Type</th>
+          <th>Occasion</th>
+          <th>Body Types</th>
+          <th>Modesty</th>
+          <th>Skin Tones</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in outfits %}
+        <tr>
+          <td>
+            <img class="outfit-thumb"
+              src="{{ url_for('static', filename=o.image) }}"
+              alt="{{ o.label }}"
+              onerror="this.style.opacity=0.2;">
+          </td>
+          <td style="font-weight:500; max-width:200px; font-size:13px;">{{ o.label }}</td>
+          <td>
+            <span class="badge badge-{{ 'trad' if o.clothing_type == 'traditional' else 'english' }}">
+              {{ o.clothing_type }}
+            </span>
+          </td>
+          <td style="text-transform:capitalize;">{{ o.occasion }}</td>
+          <td style="font-size:12px; color:#666; max-width:140px;">{{ o.body_type }}</td>
+          <td><span class="badge badge-{{ o.modesty }}">{{ o.modesty }}</span></td>
+          <td style="font-size:12px; color:#666; max-width:140px;">{{ o.skin_tone }}</td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <a href="{{ url_for('admin_edit_outfit', outfit_id=o.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+              <button class="btn btn-danger btn-sm"
+                onclick="confirmDelete('{{ url_for('admin_delete_outfit', outfit_id=o.id) }}',
+                  'Delete &quot;{{ o.label }}&quot;? This cannot be undone.')">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not outfits %}
+        <tr><td colspan="8" style="text-align:center; color:#999; padding:32px;">No outfits found.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

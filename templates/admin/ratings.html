@@ -1,0 +1,70 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Ratings{% endblock %}
+{% block page_title %}Outfit Ratings{% endblock %}
+
+{% block content %}
+
+<div class="stat-grid" style="margin-bottom:20px;">
+  <div class="stat-card">
+    <div class="stat-label">Total Ratings</div>
+    <div class="stat-value">{{ ratings|length }}</div>
+  </div>
+  <div class="stat-card success">
+    <div class="stat-label">5-Star Ratings</div>
+    <div class="stat-value">{{ ratings|selectattr('rating','eq',5)|list|length }}</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="stat-label">Avg Rating</div>
+    <div class="stat-value">
+      {% if ratings %}
+        {{ "%.1f"|format(ratings|map(attribute='rating')|sum / ratings|length) }}
+      {% else %}—{% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">All Ratings</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Outfit</th>
+          <th>Type</th>
+          <th>Occasion</th>
+          <th>Rating</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in ratings %}
+        <tr>
+          <td style="font-weight:500;">{{ r.user_name }}</td>
+          <td style="max-width:220px; font-size:13px;">{{ r.label }}</td>
+          <td>
+            <span class="badge badge-{{ 'trad' if r.clothing_type == 'traditional' else 'english' }}">
+              {{ r.clothing_type }}
+            </span>
+          </td>
+          <td style="text-transform:capitalize;">{{ r.occasion }}</td>
+          <td>
+            <span style="color:{% if r.rating >= 4 %}#F39C12{% else %}#BDC3C7{% endif %}; font-weight:600; font-size:15px;">
+              {{ '★' * r.rating }}{{ '☆' * (5 - r.rating) }}
+            </span>
+            <span style="font-size:12px; color:#999; margin-left:4px;">{{ r.rating }}/5</span>
+          </td>
+          <td style="font-size:12px; color:#999;">{{ r.rated_at[:10] if r.rated_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+        {% if not ratings %}
+        <tr><td colspan="6" style="text-align:center; color:#999; padding:32px;">No ratings submitted yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

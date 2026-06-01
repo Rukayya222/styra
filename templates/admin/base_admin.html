@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin{% endblock %} — Styra Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin/admin.css') }}">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="{{ url_for('admin_dashboard') }}" class="sidebar-logo-text">Sty<span>ra</span></a>
+      <span class="sidebar-badge">Admin Panel</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+        <span class="icon">◈</span> Dashboard
+      </a>
+
+      <div class="sidebar-section-label" style="margin-top:12px;">Catalogue</div>
+      <a href="{{ url_for('admin_outfits') }}" class="sidebar-link {% if 'outfit' in request.endpoint %}active{% endif %}">
+        <span class="icon">👗</span> Outfits
+      </a>
+      <a href="{{ url_for('admin_add_outfit') }}" class="sidebar-link {% if request.endpoint == 'admin_add_outfit' %}active{% endif %}">
+        <span class="icon">＋</span> Add Outfit
+      </a>
+
+      <div class="sidebar-section-label" style="margin-top:12px;">Users</div>
+      <a href="{{ url_for('admin_users') }}" class="sidebar-link {% if request.endpoint == 'admin_users' %}active{% endif %}">
+        <span class="icon">◉</span> All Users
+      </a>
+      <a href="{{ url_for('admin_ratings') }}" class="sidebar-link {% if request.endpoint == 'admin_ratings' %}active{% endif %}">
+        <span class="icon">★</span> Ratings
+      </a>
+
+      <div class="sidebar-section-label" style="margin-top:12px;">System</div>
+      <a href="{{ url_for('landing') }}" class="sidebar-link" target="_blank">
+        <span class="icon">↗</span> View Site
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="{{ url_for('admin_logout') }}">Sign out of admin →</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      <div class="topbar-right">
+        <span>Logged in as <strong>admin</strong></span>
+      </div>
+    </div>
+
+    <div class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-list">
+            {% for category, message in messages %}
+              <div class="flash-msg {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <span class="modal-icon">⚠</span>
+      <p class="modal-title">Confirm deletion</p>
+      <p class="modal-body" id="modalMsg">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <form id="deleteForm" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Yes, delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function confirmDelete(url, msg) {
+    document.getElementById('modalMsg').textContent = msg || 'This action cannot be undone.';
+    document.getElementById('deleteForm').action = url;
+    document.getElementById('deleteModal').classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('deleteModal').classList.remove('open');
+  }
+  document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

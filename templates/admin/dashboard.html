@@ -1,0 +1,119 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Stat cards -->
+<div class="stat-grid">
+  <div class="stat-card accent">
+    <div class="stat-label">Total Outfits</div>
+    <div class="stat-value">{{ stats.total_outfits }}</div>
+    <div class="stat-sub">in the catalogue</div>
+  </div>
+  <div class="stat-card success">
+    <div class="stat-label">Registered Users</div>
+    <div class="stat-value">{{ stats.total_users }}</div>
+    <div class="stat-sub">accounts created</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Ratings</div>
+    <div class="stat-value">{{ stats.total_ratings }}</div>
+    <div class="stat-sub">outfit ratings submitted</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Traditional Outfits</div>
+    <div class="stat-value">{{ stats.traditional }}</div>
+    <div class="stat-sub">Ankara, Aso-oke, Kaftan</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">English Outfits</div>
+    <div class="stat-value">{{ stats.english }}</div>
+    <div class="stat-sub">Western fashion</div>
+  </div>
+</div>
+
+<!-- Outfit breakdown by occasion -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Outfits by Occasion</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead><tr><th>Occasion</th><th>Traditional</th><th>English</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for row in stats.by_occasion %}
+          <tr>
+            <td style="text-transform:capitalize; font-weight:500;">{{ row.occasion }}</td>
+            <td>{{ row.traditional }}</td>
+            <td>{{ row.english }}</td>
+            <td><strong>{{ row.total }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Recent Users</span>
+      <a href="{{ url_for('admin_users') }}" class="btn btn-secondary btn-sm">View all</a>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
+        <tbody>
+          {% for u in recent_users %}
+          <tr>
+            <td style="font-weight:500;">{{ u.name }}</td>
+            <td style="color:#666;">{{ u.email }}</td>
+            <td style="color:#999; font-size:12px;">{{ u.created[:10] if u.created else '—' }}</td>
+          </tr>
+          {% endfor %}
+          {% if not recent_users %}
+          <tr><td colspan="3" style="text-align:center; color:#999; padding:20px;">No users yet</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Top rated outfits -->
+<div class="card" style="margin-top:20px;">
+  <div class="card-header">
+    <span class="card-title">Top Rated Outfits</span>
+    <a href="{{ url_for('admin_ratings') }}" class="btn btn-secondary btn-sm">View all ratings</a>
+  </div>
+  <div class="card-body" style="padding:0;">
+    <table>
+      <thead><tr><th>Image</th><th>Label</th><th>Type</th><th>Occasion</th><th>Avg Rating</th><th>Votes</th></tr></thead>
+      <tbody>
+        {% for o in top_rated %}
+        <tr>
+          <td>
+            <img class="outfit-thumb"
+              src="{{ url_for('static', filename=o.image) }}"
+              alt="{{ o.label }}"
+              onerror="this.src=''; this.style.display='none';">
+          </td>
+          <td style="font-weight:500; max-width:220px;">{{ o.label }}</td>
+          <td><span class="badge badge-{{ 'trad' if o.clothing_type == 'traditional' else 'english' }}">{{ o.clothing_type }}</span></td>
+          <td style="text-transform:capitalize;">{{ o.occasion }}</td>
+          <td><strong>{{ "%.1f"|format(o.avg_rating) }}</strong> ★</td>
+          <td>{{ o.vote_count }}</td>
+        </tr>
+        {% endfor %}
+        {% if not top_rated %}
+        <tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No ratings yet</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Sign In — Styra{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+
+  <div class="auth-panel">
+    <div class="auth-panel-bg"></div>
+    <div class="auth-panel-content">
+      <span class="auth-panel-logo">Styra</span>
+      <blockquote class="auth-panel-quote">
+        <span class="auth-panel-quote-mark">"</span>
+        Style is not about what you wear — it is about how you arrive.
+      </blockquote>
+      <div class="auth-panel-chips">
+        <span>Traditional wear</span>
+        <span>English fashion</span>
+        <span>Body inclusive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-form-inner">
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-sub">Sign in to your Styra style profile.</p>
+      </div>
+      <form method="POST" action="{{ url_for('login') }}" class="auth-form">
+        <div class="form-group">
+          <div class="field">
+            <label class="label" for="email">Email address</label>
+            <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <input class="input" type="password" id="password" name="password" placeholder="Your password" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn--full btn--lg">Sign in →</button>
+        </div>
+      </form>
+      <p class="auth-switch">Don't have an account? <a href="{{ url_for('register') }}">Create one free</a></p>
+    </div>
+  </div>
+
+</section>
+{% endblock %}

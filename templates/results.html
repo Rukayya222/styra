@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Your Looks — Styra{% endblock %}
+{% block content %}
+<section class="results-wrap">
+
+  <div class="results-header">
+    <div class="results-header-left">
+      <div class="results-eyebrow">Curated for you</div>
+      <h1 class="results-title">Your two<br>picks, selected.</h1>
+      <p class="results-explanation">{{ explanation }}</p>
+    </div>
+    <div class="results-header-right">
+      <span class="results-count">0{{ outfits|length }}</span>
+      <span class="results-count-label">Outfits selected</span>
+    </div>
+  </div>
+
+  {% if outfits %}
+  <div class="stylist-note">
+    <div class="stylist-note-icon">✦</div>
+    <p class="stylist-note-text">
+      We selected these two looks from our full catalogue based on your body type, modesty preference, and skin tone — not just the occasion. Each card below explains exactly why it was chosen for you.
+      <span class="stylist-note-attr">— Your Styra Stylist</span>
+    </p>
+  </div>
+
+  <div class="outfits-grid">
+    {% for outfit in outfits %}
+    <div class="outfit-card" id="card-{{ outfit.id }}">
+      <div class="outfit-img-wrap">
+        <div class="outfit-num">{{ loop.index }}</div>
+        <img class="outfit-img" src="{{ url_for('static', filename=outfit.image) }}"
+          alt="{{ outfit.label }}" loading="lazy"
+          onerror="this.parentElement.classList.add('outfit-img-wrap--missing');this.style.display='none';">
+        <div class="outfit-img-placeholder">Image coming soon</div>
+      </div>
+      <div class="outfit-info">
+        <p class="outfit-label">{{ outfit.label }}</p>
+        {% if outfit.why_this %}
+        <div class="outfit-why">{{ outfit.why_this }}</div>
+        {% endif %}
+        <div class="outfit-tags">
+          <span class="outfit-tag">{{ params.occasion }}</span>
+          <span class="outfit-tag">{{ params.clothing_type }}</span>
+          {% if outfit.modesty %}<span class="outfit-tag">{{ outfit.modesty }}</span>{% endif %}
+        </div>
+        {% if not is_guest %}
+        <div class="star-rating">
+          <span class="star-label">Rate</span>
+          {% for i in range(1, 6) %}
+          <button class="star" data-val="{{ i }}" onclick="rate({{ outfit.id }}, {{ i }})" title="{{ i }} stars">★</button>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Guest nudge — shown only when not logged in -->
+  {% if is_guest %}
+  <div class="guest-nudge">
+    <div class="guest-nudge-inner">
+      <h3 class="guest-nudge-title">Want to save these looks?</h3>
+      <p class="guest-nudge-body">Create a free Styra account to rate outfits, build your personal wardrobe archive, and come back to your saved looks anytime.</p>
+      <div class="guest-nudge-cta">
+        <a href="{{ url_for('register') }}" class="btn btn--rose">Create a free account</a>
+        <a href="{{ url_for('login') }}" class="btn btn--ghost">Sign in</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">🪡</span>
+    <h2 class="empty-title">No outfits found for this combination</h2>
+    <p class="empty-sub">Try adjusting your occasion or clothing type.</p>
+    <a href="{{ url_for('quiz') }}" class="btn btn--rose">Retake the quiz</a>
+  </div>
+  {% endif %}
+
+  <div class="results-actions">
+    <a href="{{ url_for('quiz') }}" class="btn btn--ghost">Retake quiz</a>
+    {% if not is_guest %}<a href="{{ url_for('saved') }}" class="btn btn--rose">View saved looks →</a>{% endif %}
+  </div>
+
+</section>
+
+{% if not is_guest %}
+<script>
+function rate(outfitId, val) {
+  const container = document.getElementById('card-' + outfitId);
+  container.querySelectorAll('.star').forEach((s, i) => {
+    s.classList.toggle('star--active', i < val);
+  });
+  fetch('/rate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'outfit_id=' + outfitId + '&rating=' + val
+  });
+}
+</script>
+{% endif %}
+{% endblock %}

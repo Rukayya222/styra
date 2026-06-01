@@ -1,0 +1,58 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Users{% endblock %}
+{% block page_title %}Registered Users{% endblock %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">{{ users|length }} registered user{{ 's' if users|length != 1 }}</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Joined</th>
+          <th>Style Profile</th>
+          <th>Ratings</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td style="color:#999;">{{ u.id }}</td>
+          <td style="font-weight:500;">{{ u.name }}</td>
+          <td style="color:#666;">{{ u.email }}</td>
+          <td style="font-size:12px; color:#999;">{{ u.created[:10] if u.created else '—' }}</td>
+          <td style="font-size:12px;">
+            {% if u.clothing_type %}
+              <span class="badge badge-{{ 'trad' if u.clothing_type == 'traditional' else 'english' }}">{{ u.clothing_type }}</span>
+              · {{ u.occasion or '—' }} · {{ u.modesty or '—' }}
+            {% else %}
+              <span style="color:#ccc;">No profile yet</span>
+            {% endif %}
+          </td>
+          <td style="font-weight:500;">{{ u.rating_count or 0 }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm"
+              onclick="confirmDelete(
+                '{{ url_for('admin_delete_user', user_id=u.id) }}',
+                'Delete user {{ u.name }}? All their ratings and profile data will also be removed.')">
+              Delete
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not users %}
+        <tr><td colspan="7" style="text-align:center; color:#999; padding:32px;">No users registered yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Styra{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styra.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <nav class="nav">
+    <a href="{{ url_for('landing') }}" class="nav-logo">Sty<span>ra</span></a>
+    <div class="nav-links">
+      <a href="{{ url_for('about') }}" class="nav-link">About</a>
+      <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('quiz') }}" class="nav-link">Style Quiz</a>
+        <a href="{{ url_for('saved') }}" class="nav-link">Saved</a>
+        <a href="{{ url_for('logout') }}" class="nav-link nav-link--muted">Sign out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="nav-link">Sign in</a>
+        <a href="{{ url_for('register') }}" class="btn btn--sm btn--rose">Join free</a>
+      {% endif %}
+    </div>
+  </nav>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash flash--{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo">Styra</span>
+      <div class="footer-links">
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('quiz') }}">Style Quiz</a>
+      </div>
+      <p class="footer-text">&copy; 2025 Styra · Personalised fashion for you</p>
+    </div>
+  </footer>
+</body>
+</html>

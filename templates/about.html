@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}About — Styra{% endblock %}
+{% block content %}
+
+<section class="about-page">
+
+  <div class="about-header">
+    <div class="section-label">Our story</div>
+    <h1 class="about-main-title">Fashion that knows you.</h1>
+    <p class="about-main-sub">Built on the belief that real personalisation means knowing your body, your culture, and your moment — not just your click history.</p>
+  </div>
+
+  <div class="about-box-wrap">
+
+    <div class="about-box">
+      <div class="about-box-label">Why Styra exists</div>
+      <p>Most digital fashion platforms treat personalisation as secondary. They recommend what is popular, what is in stock, or what earns a commission. Styra does none of that. Every outfit in our catalogue is manually reviewed and tagged — body-type suitability, modesty classification, skin-tone colour compatibility, and occasion relevance. When you complete the style quiz, we score every outfit against your exact profile and return the two that match best, with an explanation for each.</p>
+    </div>
+
+    <div class="about-box-row">
+
+      <div class="about-box">
+        <div class="about-box-label">Built for Nigerian women</div>
+        <p>Styra was designed with the full spectrum of how Nigerian women dress in mind. Traditional attire and English fashion. Fully modest and expressively bold. Owambe and office. We do not think these things need separate apps. They belong together.</p>
+      </div>
+
+      <div class="about-box">
+        <div class="about-box-label">How recommendations work</div>
+        <p>We use a rule-based scoring engine — not a black-box algorithm. This means every recommendation can be explained. You will always know <em>why</em> an outfit was chosen for you. Body type is the primary signal. Modesty preference second. Skin-tone colour harmony third.</p>
+      </div>
+
+    </div>
+
+    <div class="about-box about-box--dark">
+      <div class="about-box-label about-box-label--light">The process</div>
+      <div class="about-steps">
+        <div class="about-step">
+          <span class="about-step-num">01</span>
+          <div class="about-step-text">
+            <strong>Tell us about you</strong>
+            <span>A 7-step quiz — skin tone, body shape, clothing style, modesty, occasion, climate, and your vibe.</span>
+          </div>
+        </div>
+        <div class="about-step">
+          <span class="about-step-num">02</span>
+          <div class="about-step-text">
+            <strong>We select two looks</strong>
+            <span>Not a feed. Not twenty options. Two outfits scored against your exact profile, with reasoning for each.</span>
+          </div>
+        </div>
+        <div class="about-step">
+          <span class="about-step-num">03</span>
+          <div class="about-step-text">
+            <strong>Save what you love</strong>
+            <span>Rate your picks and save them. Your wardrobe archive lives in your Styra profile.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="about-cta-wrap">
+    <a href="{{ url_for('quiz') }}" class="btn btn--rose btn--lg">Take the style quiz →</a>
+  </div>
+
+</section>
+{% endblock %}

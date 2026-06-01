@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+{% block title %}Style Quiz — Styra{% endblock %}
+
+{% block content %}
+<section class="quiz-wrap">
+
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progressFill"></div></div>
+
+  <div class="quiz-header">
+    <p class="quiz-step-label" id="stepLabel">Step 1 of 7</p>
+    <h2 class="quiz-question" id="quizQuestion"></h2>
+    <p class="quiz-hint" id="quizHint"></p>
+  </div>
+
+  <form id="quizForm" method="POST" action="{{ url_for('recommend') }}">
+
+    <!-- Step 1: Skin tone -->
+    <div class="quiz-step active" data-step="1">
+      <div class="tile-grid tile-grid--skin">
+        <label class="skin-tile"><input type="radio" name="skin_tone" value="light" required>
+          <span class="skin-swatch" style="background:#F5D5C0;"></span>
+          <span class="skin-label">Light</span></label>
+        <label class="skin-tile"><input type="radio" name="skin_tone" value="light_warm">
+          <span class="skin-swatch" style="background:#E8B98A;"></span>
+          <span class="skin-label">Light warm</span></label>
+        <label class="skin-tile"><input type="radio" name="skin_tone" value="medium">
+          <span class="skin-swatch" style="background:#C68642;"></span>
+          <span class="skin-label">Medium</span></label>
+        <label class="skin-tile"><input type="radio" name="skin_tone" value="tan">
+          <span class="skin-swatch" style="background:#A0522D;"></span>
+          <span class="skin-label">Tan</span></label>
+        <label class="skin-tile"><input type="radio" name="skin_tone" value="deep">
+          <span class="skin-swatch" style="background:#4A2511;"></span>
+          <span class="skin-label">Deep</span></label>
+      </div>
+    </div>
+
+    <!-- Step 2: Body type -->
+    <div class="quiz-step" data-step="2">
+      <div class="tile-grid tile-grid--horiz">
+        <label class="choice-tile choice-tile--row"><input type="radio" name="body_type" value="hourglass" required>
+          <span class="choice-icon">⧗</span>
+          <div class="choice-text"><span class="choice-name">Hourglass</span><span class="choice-desc">Balanced bust and hips, defined waist</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="body_type" value="pear">
+          <span class="choice-icon">▽</span>
+          <div class="choice-text"><span class="choice-name">Pear</span><span class="choice-desc">Hips noticeably wider than shoulders</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="body_type" value="apple">
+          <span class="choice-icon">◯</span>
+          <div class="choice-text"><span class="choice-name">Apple</span><span class="choice-desc">Fuller around the middle, narrower hips</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="body_type" value="rectangle">
+          <span class="choice-icon">▭</span>
+          <div class="choice-text"><span class="choice-name">Rectangle</span><span class="choice-desc">Similar width throughout, less defined waist</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="body_type" value="petite">
+          <span class="choice-icon">◁</span>
+          <div class="choice-text"><span class="choice-name">Petite</span><span class="choice-desc">Smaller, shorter frame — proportions matter most</span></div></label>
+      </div>
+    </div>
+
+    <!-- ── BOOST 1 — horizontal banner style ── -->
+    <div class="quiz-step quiz-boost" data-step="boost1">
+      <div class="boost-banner">
+        <div class="boost-banner-left">
+          <span class="boost-banner-tag">✦ Progress</span>
+          <h3 class="boost-banner-title">Your silhouette is noted.</h3>
+          <p class="boost-banner-body">Every outfit we suggest from here is filtered to suit your specific body shape — the cuts, the proportions, the drape. This is where personalisation begins.</p>
+          <button type="button" class="btn btn--rose" onclick="changeStep(1)">Continue →</button>
+        </div>
+        <div class="boost-banner-right">
+          <div class="boost-banner-stat">
+            <span class="boost-banner-stat-num">2</span>
+            <span class="boost-banner-stat-label">of 7 steps done</span>
+          </div>
+          <div class="boost-banner-divider"></div>
+          <p class="boost-banner-note">Next up — your clothing world.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Clothing type -->
+    <div class="quiz-step" data-step="3">
+      <div class="tile-grid tile-grid--2col">
+        <label class="choice-tile choice-tile--large"><input type="radio" name="clothing_type" value="traditional" required>
+          <span class="choice-name">Traditional</span>
+          <span class="choice-desc">Ankara, Aso-oke, Kaftan, and cultural attire rooted in identity and heritage</span></label>
+        <label class="choice-tile choice-tile--large"><input type="radio" name="clothing_type" value="english">
+          <span class="choice-name">English (Western)</span>
+          <span class="choice-desc">Contemporary silhouettes and modern fashion styles for everyday life</span></label>
+      </div>
+    </div>
+
+    <!-- Step 4: Modesty -->
+    <div class="quiz-step" data-step="4">
+      <div class="tile-grid tile-grid--horiz">
+        <label class="choice-tile choice-tile--row"><input type="radio" name="modesty" value="modest" required>
+          <div class="choice-text"><span class="choice-name">Fully covered</span><span class="choice-desc">Full sleeves, high neckline, floor-length — modesty is non-negotiable for you</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="modesty" value="modest">
+          <div class="choice-text"><span class="choice-name">Modest but relaxed</span><span class="choice-desc">Covered and comfortable, with a little breathing room — still well within bounds</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="modesty" value="balanced">
+          <div class="choice-text"><span class="choice-name">Tastefully balanced</span><span class="choice-desc">Mostly covered with a little flair — you enjoy the sweet spot between modest and expressive</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="modesty" value="bold">
+          <div class="choice-text"><span class="choice-name">Expressive and open</span><span class="choice-desc">You dress boldly and confidently — coverage is a stylistic choice, not a rule</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="modesty" value="bold">
+          <div class="choice-text"><span class="choice-name">Completely unrestricted</span><span class="choice-desc">No limits, all confidence — fashion is your canvas and you paint it loud</span></div></label>
+      </div>
+    </div>
+
+    <!-- ── BOOST 2 — split layout with 8.jpg image to the side ── -->
+    <div class="quiz-step quiz-boost" data-step="boost2">
+      <div class="boost-split">
+        <div class="boost-split-text">
+          <span class="boost-split-tag">◈ Halfway there</span>
+          <h3 class="boost-split-title">You carry yourself with intention.</h3>
+          <p class="boost-split-body">Now we go deeper. The next questions tell us exactly when and where you are stepping out — so the outfit we pick is not just beautiful, it is <em>right for the moment.</em></p>
+          <button type="button" class="btn btn--rose" onclick="changeStep(1)">Keep going →</button>
+        </div>
+        <div class="boost-split-img">
+          <img src="{{ url_for('static', filename='images/8.jpg') }}" alt="Life is too short to wear boring clothes">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Occasion -->
+    <div class="quiz-step" data-step="5">
+      <div class="tile-grid tile-grid--horiz">
+        <label class="choice-tile choice-tile--row"><input type="radio" name="occasion" value="casual" required>
+          <div class="choice-text"><span class="choice-name">Casual</span><span class="choice-desc">Everyday outings, errands, or a relaxed day out — looking good without trying too hard</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="occasion" value="office">
+          <div class="choice-text"><span class="choice-name">Office or work</span><span class="choice-desc">Professional and put-together — authority and elegance in equal measure</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="occasion" value="formal">
+          <div class="choice-text"><span class="choice-name">Formal event</span><span class="choice-desc">A ceremony, dinner, or occasion that calls for your most polished self</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="occasion" value="wedding">
+          <div class="choice-text"><span class="choice-name">Wedding or owambe</span><span class="choice-desc">A celebration that calls for colour, fabric, and full presence — you deserve to be remembered</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="occasion" value="wedding">
+          <div class="choice-text"><span class="choice-name">Special occasion</span><span class="choice-desc">Birthday, graduation, anniversary — a moment that deserves an outfit worth remembering</span></div></label>
+      </div>
+    </div>
+
+    <!-- Step 6: Climate -->
+    <div class="quiz-step" data-step="6">
+      <div class="tile-grid tile-grid--3col">
+        <label class="choice-tile"><input type="radio" name="climate" value="hot" required>
+          <span class="choice-name">Warm and humid</span>
+          <span class="choice-desc">You need fabrics that breathe and silhouettes that keep you cool</span></label>
+        <label class="choice-tile"><input type="radio" name="climate" value="warm">
+          <span class="choice-name">Mild and pleasant</span>
+          <span class="choice-desc">Comfortable in a single layer — nothing too heavy, nothing too light</span></label>
+        <label class="choice-tile"><input type="radio" name="climate" value="cold">
+          <span class="choice-name">Cool or cold</span>
+          <span class="choice-desc">You need warmth — layers, structure, and fabrics that hold their shape</span></label>
+      </div>
+    </div>
+
+    <!-- ── BOOST 3 — full-width editorial dark strip ── -->
+    <div class="quiz-step quiz-boost" data-step="boost3">
+      <div class="boost-editorial">
+        <div class="boost-editorial-inner">
+          <div class="boost-editorial-top">
+            <span class="boost-editorial-label">✧ One more</span>
+            <div class="boost-editorial-progress">
+              <span class="boost-editorial-pips">
+                <span class="pip pip--done"></span>
+                <span class="pip pip--done"></span>
+                <span class="pip pip--done"></span>
+                <span class="pip pip--done"></span>
+                <span class="pip pip--done"></span>
+                <span class="pip pip--done"></span>
+                <span class="pip"></span>
+              </span>
+              <span class="boost-editorial-prog-label">6 of 7 done</span>
+            </div>
+          </div>
+          <h3 class="boost-editorial-title">Almost there — one last thing.</h3>
+          <p class="boost-editorial-body">You have told us your shape, your world, your occasion, and your climate. All that is left is the energy you want to walk in with. This last answer brings everything together.</p>
+          <button type="button" class="btn btn--rose btn--lg" onclick="changeStep(1)">Last step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7: Style vibe -->
+    <div class="quiz-step" data-step="7">
+      <div class="tile-grid tile-grid--horiz">
+        <label class="choice-tile choice-tile--row"><input type="radio" name="style_vibe" value="elegant" required>
+          <div class="choice-text"><span class="choice-name">Refined and graceful</span><span class="choice-desc">You move through a room like it was designed for you — polished, quiet, and powerful</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="style_vibe" value="comfy">
+          <div class="choice-text"><span class="choice-name">Easy and effortless</span><span class="choice-desc">Comfort is your love language — you look good without overthinking it</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="style_vibe" value="bold">
+          <div class="choice-text"><span class="choice-name">Bold and unforgettable</span><span class="choice-desc">You dress to be seen — colour, pattern, and statement pieces are your currency</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="style_vibe" value="elegant">
+          <div class="choice-text"><span class="choice-name">Timeless and classic</span><span class="choice-desc">Trends are noise — you prefer silhouettes that still turn heads in ten years</span></div></label>
+        <label class="choice-tile choice-tile--row"><input type="radio" name="style_vibe" value="comfy">
+          <div class="choice-text"><span class="choice-name">Casual but put-together</span><span class="choice-desc">You want to look intentional without looking like you tried — that sweet spot of effortless style</span></div></label>
+      </div>
+    </div>
+
+    <!-- ── BOOST 4 — final celebration screen ── -->
+    <div class="quiz-step quiz-boost" data-step="boost4">
+      <div class="boost-final">
+        <div class="boost-final-glow"></div>
+        <div class="boost-final-inner">
+          <div class="boost-final-icon">◯</div>
+          <h3 class="boost-final-title">Your profile is complete.</h3>
+          <p class="boost-final-body">Based on your answers, we are matching your exact silhouette, cultural preference, modesty, and mood against our full catalogue.</p>
+          <p class="boost-final-sub">Two outfits — chosen only for you — are ready.</p>
+          <button type="submit" class="btn btn--rose btn--lg">See my two picks →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-nav" id="quizNav">
+      <button type="button" class="btn btn--ghost" id="btnBack" style="display:none;" onclick="changeStep(-1)">← Back</button>
+      <button type="button" class="btn" id="btnNext" onclick="changeStep(1)">Next →</button>
+    </div>
+
+  </form>
+</section>
+
+<script>
+const STEPS_ORDER = [1, 2, 'boost1', 3, 4, 'boost2', 5, 6, 'boost3', 7, 'boost4'];
+const TOTAL_REAL = 7;
+const QUESTIONS = {
+  1: { q: "Let's start with your complexion.", hint: "Your skin tone guides us toward colours and palettes that truly complement you." },
+  2: { q: "How would you describe your body shape?", hint: "There is no wrong answer — every silhouette has outfits that were made for it." },
+  'boost1': { q: "", hint: "" },
+  3: { q: "What is your preferred clothing style?", hint: "Choose the world that feels most like home." },
+  4: { q: "How do you like to carry yourself?", hint: "Your comfort level shapes everything — coverage is deeply personal." },
+  'boost2': { q: "", hint: "" },
+  5: { q: "What occasion are you dressing for?", hint: "We will make sure every suggestion fits the moment, not just the body." },
+  6: { q: "What is the climate where you will be wearing this?", hint: "Fabric and silhouette choices change completely depending on your environment." },
+  'boost3': { q: "", hint: "" },
+  7: { q: "Finally — what energy do you want to walk in with?", hint: "Your vibe is the finishing touch. Tell us who you want to be in this outfit." },
+  'boost4': { q: "", hint: "" }
+};
+
+let currentIndex = 0;
+function getStep() { return STEPS_ORDER[currentIndex]; }
+
+function updateUI() {
+  const step = getStep();
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  const el = document.querySelector(`.quiz-step[data-step="${step}"]`);
+  if (el) el.classList.add('active');
+  const q = QUESTIONS[step];
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizHint').textContent = q.hint;
+  const realStepsSoFar = STEPS_ORDER.slice(0, currentIndex + 1).filter(s => typeof s === 'number').length;
+  const isBoost = typeof step === 'string';
+  document.getElementById('stepLabel').textContent = isBoost ? '' : `Step ${realStepsSoFar} of ${TOTAL_REAL}`;
+  const pct = (currentIndex / (STEPS_ORDER.length - 1)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  const nav = document.getElementById('quizNav');
+  const btnBack = document.getElementById('btnBack');
+  const btnNext = document.getElementById('btnNext');
+  nav.style.display = isBoost ? 'none' : 'flex';
+  btnBack.style.display = currentIndex > 0 && !isBoost ? 'inline-flex' : 'none';
+  btnNext.style.display = !isBoost ? 'inline-flex' : 'none';
+}
+
+function changeStep(dir) {
+  if (dir === 1) {
+    const step = getStep();
+    if (typeof step === 'number') {
+      const el = document.querySelector(`.quiz-step[data-step="${step}"]`);
+      const radios = el ? el.querySelectorAll('input[type="radio"]') : [];
+      const checked = Array.from(radios).some(r => r.checked);
+      if (radios.length > 0 && !checked) {
+        el.classList.add('quiz-step--error');
+        setTimeout(() => el.classList.remove('quiz-step--error'), 600);
+        return;
+      }
+    }
+  }
+  currentIndex = Math.max(0, Math.min(STEPS_ORDER.length - 1, currentIndex + dir));
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.quiz-step:not(.quiz-boost) input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => { setTimeout(() => changeStep(1), 420); });
+});
+
+updateUI();
+</script>
+{% endblock %}

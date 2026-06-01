@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Contact — Styra{% endblock %}
+{% block content %}
+
+<section class="contact-hero">
+  <div class="contact-hero-inner">
+    <div class="section-label">Reach out</div>
+    <h1 class="contact-hero-title">Get in touch.</h1>
+    <p class="contact-hero-sub">Whether it is a question, a suggestion, or just a thought — we would love to hear from you.</p>
+  </div>
+</section>
+
+<section class="contact-body">
+  <div class="contact-body-inner">
+
+    <div class="contact-info-col">
+      <div class="contact-info-block">
+        <p class="contact-info-label">What we are here for</p>
+        <p class="contact-info-text">Feedback on your outfit recommendations, questions about how Styra works, ideas to make it better, or just telling us what you thought.</p>
+      </div>
+      <div class="contact-info-block">
+        <p class="contact-info-label">Response time</p>
+        <p class="contact-info-text">This is a student project, so responses may take a little time — but every message is read and genuinely appreciated.</p>
+      </div>
+      <div class="contact-info-block">
+        <p class="contact-info-label">Email</p>
+        <p class="contact-info-text">rukayyagaya21@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="contact-form-col">
+      <form class="contact-form" id="contactForm" onsubmit="handleContact(event)">
+        <div class="contact-form-row">
+          <div class="field">
+            <label class="label" for="c-name">Your name</label>
+            <input class="input" type="text" id="c-name" placeholder="Fatima Abdullahi" required>
+          </div>
+          <div class="field">
+            <label class="label" for="c-email">Email address</label>
+            <input class="input" type="email" id="c-email" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="c-subject">What is this about?</label>
+          <select class="input" id="c-subject">
+            <option value="">Select a topic</option>
+            <option>Feedback on my recommendations</option>
+            <option>Technical issue</option>
+            <option>Question about Styra</option>
+            <option>Feature idea</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="c-message">Your message</label>
+          <textarea class="input" id="c-message" rows="6" placeholder="Tell us what is on your mind…" required></textarea>
+        </div>
+        <button type="submit" class="btn btn--rose btn--lg">Send message →</button>
+      </form>
+
+      <div class="contact-success" id="contactSuccess" style="display:none;">
+        <div class="boost-card">
+          <div class="boost-icon">✦</div>
+          <h3 class="boost-title">Message received.</h3>
+          <p class="boost-body">Thank you for reaching out. We genuinely appreciate the time you took to write — and we will get back to you when we can.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+function handleContact(e) {
+  e.preventDefault();
+  document.getElementById('contactForm').style.display = 'none';
+  document.getElementById('contactSuccess').style.display = 'block';
+}
+</script>
+{% endblock %}

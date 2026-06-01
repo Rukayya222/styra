@@ -1,0 +1,178 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ 'Edit' if outfit else 'Add' }} Outfit{% endblock %}
+{% block page_title %}{{ 'Edit Outfit' if outfit else 'Add New Outfit' }}{% endblock %}
+
+{% block content %}
+
+<form method="POST"
+  action="{{ url_for('admin_edit_outfit', outfit_id=outfit.id) if outfit else url_for('admin_add_outfit') }}"
+  enctype="multipart/form-data">
+
+  <div style="display:grid; grid-template-columns:1fr 280px; gap:24px; align-items:start;">
+
+    <!-- Left: form fields -->
+    <div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Basic Information</span></div>
+        <div class="card-body">
+          <div class="form-grid">
+
+            <div class="form-group form-full">
+              <label class="form-label">Outfit Label (display name) *</label>
+              <input class="form-control" type="text" name="label" required
+                placeholder="e.g. Floral Maxi Skirt & Turtleneck Set"
+                value="{{ outfit.label if outfit else '' }}">
+            </div>
+
+            <div class="form-group form-full">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" name="description"
+                placeholder="A short description of the outfit style and features…">{{ outfit.description if outfit else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Clothing Type *</label>
+              <select class="form-control" name="clothing_type" required>
+                <option value="">Select…</option>
+                {% for ct in ['english','traditional'] %}
+                <option value="{{ ct }}" {% if outfit and outfit.clothing_type == ct %}selected{% endif %}>{{ ct|capitalize }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Occasion *</label>
+              <select class="form-control" name="occasion" required>
+                <option value="">Select…</option>
+                {% for occ in ['casual','formal','office','wedding'] %}
+                <option value="{{ occ }}" {% if outfit and outfit.occasion == occ %}selected{% endif %}>{{ occ|capitalize }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Modesty *</label>
+              <select class="form-control" name="modesty" required>
+                <option value="">Select…</option>
+                {% for m in ['modest','balanced','bold'] %}
+                <option value="{{ m }}" {% if outfit and outfit.modesty == m %}selected{% endif %}>{{ m|capitalize }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Recommendation Attributes</span></div>
+        <div class="card-body">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label class="form-label">Body Types (comma-separated) *</label>
+              <input class="form-control" type="text" name="body_type" required
+                placeholder="hourglass,pear,apple"
+                value="{{ outfit.body_type if outfit else '' }}">
+              <span class="form-hint">Options: hourglass · pear · apple · rectangle · petite</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Skin Tones (comma-separated) *</label>
+              <input class="form-control" type="text" name="skin_tone" required
+                placeholder="deep,tan,medium"
+                value="{{ outfit.skin_tone if outfit else '' }}">
+              <span class="form-hint">Options: light · light_warm · medium · tan · deep</span>
+            </div>
+
+            <div class="form-group form-full">
+              <label class="form-label">Why Body — explanation for body type match</label>
+              <textarea class="form-control" name="why_body"
+                placeholder="e.g. The A-line skirt balances wider hips beautifully while the fitted top defines the waist.">{{ outfit.why_body if outfit else '' }}</textarea>
+            </div>
+
+            <div class="form-group form-full">
+              <label class="form-label">Why Skin — explanation for skin tone match</label>
+              <textarea class="form-control" name="why_skin"
+                placeholder="e.g. The warm ivory and gold palette glows against light and medium complexions.">{{ outfit.why_skin if outfit else '' }}</textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:4px;">
+        <button type="submit" class="btn btn-primary">
+          {{ '💾 Save changes' if outfit else '＋ Add outfit' }}
+        </button>
+        <a href="{{ url_for('admin_outfits') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+
+    </div>
+
+    <!-- Right: image upload -->
+    <div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Outfit Image</span></div>
+        <div class="card-body" style="display:flex; flex-direction:column; align-items:center;">
+
+          <div class="img-preview-wrap" id="imgPreviewWrap">
+            {% if outfit and outfit.image %}
+              <img id="imgPreview"
+                src="{{ url_for('static', filename=outfit.image) }}"
+                alt="Current image"
+                onerror="this.style.display='none'">
+            {% else %}
+              <div class="img-preview-placeholder" id="imgPlaceholder">No image<br>selected</div>
+            {% endif %}
+          </div>
+
+          {% if outfit and outfit.image %}
+          <p style="font-size:11px; color:#999; text-align:center; margin-bottom:12px; word-break:break-all;">
+            Current: {{ outfit.image.split('/')[-1] }}
+          </p>
+          {% endif %}
+
+          <div class="form-group" style="width:100%;">
+            <label class="form-label">Upload new image</label>
+            <input class="form-control" type="file" name="image_file"
+              accept=".jpg,.jpeg,.png,.webp"
+              id="imageFileInput"
+              {% if not outfit %}required{% endif %}>
+            <span class="form-hint">JPG, PNG or WebP. Image will be auto-named and placed in the correct folder.</span>
+          </div>
+
+          {% if outfit %}
+          <div class="form-group" style="width:100%; margin-top:8px;">
+            <label class="form-label">Or keep existing path</label>
+            <input class="form-control" type="text" name="image_path"
+              value="{{ outfit.image }}"
+              placeholder="images/english/casual/1_english_casual.jpg">
+            <span class="form-hint">Leave blank to use uploaded file. Fill in to manually set the path.</span>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('imageFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const wrap = document.getElementById('imgPreviewWrap');
+    wrap.innerHTML = '<img id="imgPreview" src="' + ev.target.result + '" alt="Preview" style="width:100%;height:100%;object-fit:cover;">';
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Styra — Dress with Intention{% endblock %}
+{% block content %}
+
+<section class="hero-immersive">
+  <img src="{{ url_for('static', filename='images/3.jpg') }}" alt="" class="hero-bg-photo" aria-hidden="true">
+  <div class="hero-immersive-veil"></div>
+  <div class="hero-immersive-content">
+    <p class="hero-eyebrow-light">Your personal style guide</p>
+    <h1 class="hero-immersive-title">Dress with<br><em>intention.</em></h1>
+    <p class="hero-immersive-sub">Styra learns your style — your body, your culture, your vibe — and finds outfits that are truly yours.</p>
+    <div class="hero-immersive-cta">
+      <a href="{{ url_for('quiz') }}" class="btn btn--lg btn--rose">Start your style quiz</a>
+      <a href="{{ url_for('login') }}" class="btn btn--ghost-cream btn--lg">Sign in</a>
+    </div>
+    <div class="hero-immersive-chips">
+      <span class="chip-light">Traditional wear</span>
+      <span class="chip-light">English fashion</span>
+      <span class="chip-light">Modesty-aware</span>
+      <span class="chip-light">Body inclusive</span>
+    </div>
+  </div>
+</section>
+
+<div class="value-strip">
+  <div class="value-item"><span class="value-label">Traditional Wear</span><span class="value-desc">Ankara, Aso-oke, Kaftan</span></div>
+  <div class="value-item"><span class="value-label">English Fashion</span><span class="value-desc">Contemporary silhouettes</span></div>
+  <div class="value-item"><span class="value-label">Modesty-Aware</span><span class="value-desc">From full coverage to bold</span></div>
+  <div class="value-item"><span class="value-label">Body Inclusive</span><span class="value-desc">Tailored to your silhouette</span></div>
+</div>
+
+<section class="how-section">
+  <div class="section-label">The process</div>
+  <h2 class="section-title">Three steps to your perfect look</h2>
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <h3 class="step-heading">Tell us about you</h3>
+      <p class="step-body">A thoughtful 7-step questionnaire — your skin tone, body shape, cultural preference, modesty, occasion, climate, and the mood you want to carry.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <h3 class="step-heading">We select two looks</h3>
+      <p class="step-body">Not a feed. Not twenty options. Two outfits chosen with precision — scored against your exact profile, with a note explaining why each was chosen for you.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <h3 class="step-heading">Save what you love</h3>
+      <p class="step-body">Rate the looks, save your favourites. Your personal wardrobe archive lives in your Styra profile, ready whenever you need it.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
