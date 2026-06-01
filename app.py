@@ -12,6 +12,36 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def init_db():
+    db = get_db()
+    db.execute('''CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    db.execute('''CREATE TABLE IF NOT EXISTS outfits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        clothing_type TEXT, occasion TEXT, body_type TEXT,
+        modesty TEXT, skin_tone TEXT, image TEXT,
+        label TEXT, description TEXT, why_body TEXT, why_skin TEXT
+    )''')
+    db.execute('''CREATE TABLE IF NOT EXISTS user_profiles (
+        user_id INTEGER PRIMARY KEY,
+        skin_tone TEXT, body_type TEXT, clothing_type TEXT,
+        modesty TEXT, occasion TEXT, climate TEXT, style_vibe TEXT
+    )''')
+    db.execute('''CREATE TABLE IF NOT EXISTS ratings (
+        user_id INTEGER, outfit_id INTEGER, rating INTEGER,
+        rated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, outfit_id)
+    )''')
+    db.commit()
+    db.close()
+
+init_db()
+
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
