@@ -4,8 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'styra-secret-key-change-in-production'
-DB_PATH = os.path.join(os.path.dirname(__file__), 'styra.db')
+app.secret_key = os.environ.get('SECRET_KEY', 'styra-secret-key-change-in-production')
+DB_PATH = os.environ.get('DB_PATH', os.path.join(os.path.dirname(__file__), 'styra.db'))
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
